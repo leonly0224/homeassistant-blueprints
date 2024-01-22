@@ -1,0 +1,58 @@
+blueprint:
+    name: Motion off Switch
+    description: Turn off Switch when no motion is detected after some time.
+    domain: automation
+#    source_url:
+    author: leonly0224
+    input:
+        input_entity_motion:
+            name: Motion Sensor
+            selector:
+                entity:
+                    filter:
+                        - device_class:
+                              - motion
+                          domain:
+                              - binary_sensor
+                    multiple: false
+        input_entity_switch:
+            name: Switch
+            selector:
+                target:
+                    filter:
+                        - domain:
+                              - Switch
+        input_int_during:
+            name: Wait time
+            description: Time to leave the Switch on after last motion is detected.
+            default: 600
+            selector:
+                number:
+                    min: 0.0
+                    max: 3600.0
+                    unit_of_measurement: seconds
+                    step: 1.0
+                    mode: slider
+mode: restart
+max_exceeded: silent
+trigger:
+    - platform: state
+      entity_id: !input input_entity_switch
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: !input input_entity_motion
+      from: 'off'
+      to: 'on'
+action:
+    - alias: Wait until there is no motion from device
+      wait_for_trigger:
+          platform: state
+          entity_id: !input input_entity_motion
+          from: 'on'
+          to: 'off'
+    - alias: Wait the number of seconds that has been set
+      delay: !input input_int_during
+    - alias: Turn off the switch
+      service: switch.turn_off
+      target: !input input_entity_switch
