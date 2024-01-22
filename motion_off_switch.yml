@@ -73,9 +73,8 @@ action:
         conditions:
           - condition: trigger
             id: trigger_switch_on
-          - condition: state
-            id: !input input_bool_turn_on_when_motion
-            state: "true"
+          - condition: template
+            value_template: !input input_bool_turn_on_when_motion
     then:
       - service: switch.turn_on
         target: !input input_entity_switch
