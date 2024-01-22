@@ -32,7 +32,8 @@ blueprint:
       name: "Auto on"
       description: "whether auto turn on [Switch] when [Motion] is detected."
       default: false
-      boolean:
+      selector:
+        boolean:
     input_entity_door:
       name: Door Sensor
       description: "turn on [Switch] when [Door] open"
