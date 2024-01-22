@@ -1,0 +1,99 @@
+blueprint:
+  name: Motion off Switch
+  description: Turn off Switch when no motion is detected after some time.
+  domain: automation
+  source_url: https://github.com/leonly0224/homeassistant-blueprints/blob/main/motion_off_switch.yml
+  author: leonly0224
+  mode: restart
+  max_exceeded: silent
+  input:
+    input_entity_switch:
+      name: "Switch"
+      selector:
+        target:
+          entity:
+            domain: switch
+    input_entity_motion:
+      name: "Motion Sensor"
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    input_int_delay_off:
+      name: "Wait time"
+      description: "Time to leave the Switch on after last motion is detected."
+      default: 600
+      selector:
+        number:
+          min: 0.0
+          max: 3600.0
+          unit_of_measurement: seconds
+          step: 1.0
+          mode: slider
+    input_bool_turn_on_when_motion:
+      name: "Auto on"
+      description: "whether auto turn on [Switch] when [Motion] is detected."
+      default: false
+      boolean:
+    input_entity_door:
+      name: Door Sensor
+      description: "turn on [Switch] when [Door] open"
+      selector:
+        entity:
+          domain: binary_sensor
+trigger:
+  - platform: state
+    id: trigger_switch_on
+    entity_id: !input input_entity_switch
+    from: "off"
+    to: "on"
+  - platform: state
+    id: trigger_motion_on
+    entity_id: !input input_entity_motion
+    from: "off"
+    to: "on"
+  - platform: state
+    id: trigger_door_open
+    entity_id: !input input_entity_door
+    from: "off"
+    to: "on"
+action:
+  - alias: "Branch: turn on [Switch] when [Door] open"
+    if:
+      - condition: trigger
+        id: trigger_door_open
+    then:
+      - service: switch.turn_on
+        target: !input input_entity_switch
+  - alias: "Branch: maybe turn on [Switch] when [Motion]"
+    if:
+      - condition: and
+        conditions:
+          - condition: trigger
+            id: trigger_switch_on
+          - condition: state
+            id: !input input_bool_turn_on_when_motion
+            state: "true"
+    then:
+      - service: switch.turn_on
+        target: !input input_entity_switch
+  - alias: "Branch: [Switch] no [Motion] auto off"
+    if:
+      - condition: or
+        conditions:
+          - condition: trigger
+            id: trigger_switch_on
+          - condition: trigger
+            id: trigger_motion_on
+    then:
+      - alias: "wait until there is no [Motion]"
+        wait_for_trigger:
+          platform: state
+          entity_id: !input input_entity_motion
+          from: "on"
+          to: "off"
+      - alias: "wait [Delay] seconds"
+        delay: !input input_int_delay_off
+      - alias: "turn off the [Switch]"
+        service: switch.turn_off
+        target: !input input_entity_switch
