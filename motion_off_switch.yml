@@ -36,7 +36,8 @@ blueprint:
         boolean:
     input_entity_door:
       name: Door Sensor
-      description: "turn on [Switch] when [Door] open"
+      description: "(optional) turn on [Switch] when [Door] open"
+      default: {}
       selector:
         entity:
           domain: binary_sensor
