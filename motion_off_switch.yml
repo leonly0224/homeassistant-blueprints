@@ -55,11 +55,12 @@ trigger:
     entity_id: !input input_entity_motion
     from: "off"
     to: "on"
-  - platform: state
+  - platform: template
     id: trigger_door_open
-    entity_id: !input input_entity_door
-    from: "off"
-    to: "on"
+    value_template: >
+      {% if is_state(input_entity_door, 'on') %}
+        true
+      {% endif %}
 action:
   - alias: "Branch: turn on [Switch] when [Door] open"
     if:
