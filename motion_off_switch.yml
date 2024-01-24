@@ -44,6 +44,7 @@ blueprint:
 
 mode: restart
 max_exceeded: silent
+
 trigger:
   - platform: state
     id: trigger_switch_on
@@ -57,10 +58,7 @@ trigger:
     to: "on"
   - platform: template
     id: trigger_door_open
-    value_template: >
-      {% if is_state(input_entity_door, 'on') %}
-        true
-      {% endif %}
+    value_template: "{{ is_state(input_entity_door, 'on')" }}"
 action:
   - alias: "Branch: turn on [Switch] when [Door] open"
     if:
