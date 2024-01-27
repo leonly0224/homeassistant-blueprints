@@ -19,7 +19,7 @@ blueprint:
     input_int_delay_off:
       name: "Wait time"
       description: "Time to leave the Switch on after last motion is detected."
-      default: 600
+      default: 10
       selector:
         number:
           min: 0.0
