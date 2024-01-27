@@ -8,9 +8,8 @@ blueprint:
     input_entity_switch:
       name: "Switch"
       selector:
-        target:
-          entity:
-            domain: switch
+        entity:
+          domain: switch
     input_entity_motion:
       name: "Motion Sensor"
       selector:
