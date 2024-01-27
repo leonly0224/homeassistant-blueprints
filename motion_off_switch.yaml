@@ -2,7 +2,7 @@ blueprint:
   name: Motion off Switch
   description: Turn off Switch when no motion is detected after some time.
   domain: automation
-  source_url: https://github.com/leonly0224/homeassistant-blueprints/blob/main/motion_off_switch.yml
+  source_url: https://github.com/leonly0224/homeassistant-blueprints/blob/main/motion_off_switch.yaml
   author: leonly0224
   input:
     input_entity_switch:
