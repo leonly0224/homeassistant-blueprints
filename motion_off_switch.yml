@@ -58,7 +58,7 @@ action:
             value_template: !input input_bool_turn_on_when_motion
     then:
       - service: switch.turn_on
-        target: !input input_entity_switch
+        entity_id: !input input_entity_switch
   - alias: "Branch: [Switch] no [Motion] auto off"
     if:
       - condition: or
@@ -78,4 +78,4 @@ action:
         delay: !input input_int_delay_off
       - alias: "turn off the [Switch]"
         service: switch.turn_off
-        target: !input input_entity_switch
+        entity_id: !input input_entity_switch
