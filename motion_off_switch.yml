@@ -58,7 +58,7 @@ action:
           - condition: trigger
             id: trigger_motion_on
           - condition: template
-            value_template: {{ input_bool_turn_on_when_motion }}
+            value_template: "{{ input_bool_turn_on_when_motion }}"
     then:
       - service: switch.turn_on
         target: !input input_entity_switch
