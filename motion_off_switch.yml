@@ -34,18 +34,9 @@ blueprint:
       default: false
       selector:
         boolean:
-    input_entity_door:
-      name: Door Sensor
-      description: "(optional) turn on [Switch] when [Door] open"
-      default: []
-      selector:
-        entity:
-          domain: binary_sensor
 
 mode: restart
 max_exceeded: silent
-variables:
-  input_entity_door: !input input_entity_door
 trigger:
   - platform: state
     id: trigger_switch_on
@@ -57,23 +48,13 @@ trigger:
     entity_id: !input input_entity_motion
     from: "off"
     to: "on"
-  - platform: template
-    id: trigger_door_open
-    value_template: "{{ is_state(input_entity_door, 'on') }}"
 action:
-  - alias: "Branch: turn on [Switch] when [Door] open"
-    if:
-      - condition: trigger
-        id: trigger_door_open
-    then:
-      - service: switch.turn_on
-        target: !input input_entity_switch
   - alias: "Branch: maybe turn on [Switch] when [Motion]"
     if:
       - condition: and
         conditions:
           - condition: trigger
-            id: trigger_switch_on
+            id: trigger_motion_on
           - condition: template
             value_template: !input input_bool_turn_on_when_motion
     then:
