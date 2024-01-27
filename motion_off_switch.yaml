@@ -23,8 +23,8 @@ blueprint:
       selector:
         number:
           min: 0.0
-          max: 3600.0
-          unit_of_measurement: seconds
+          max: 30.0
+          unit_of_measurement: minutes
           step: 1.0
           mode: slider
     input_bool_turn_on_when_motion:
